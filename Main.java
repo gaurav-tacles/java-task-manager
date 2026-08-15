@@ -20,21 +20,22 @@ public class Main{
             System.out.println("2. View Tasks");
             System.out.println("3. Update Task");
             System.out.println("4. Delete Task");
-            System.out.println("5. Exit");
+            System.out.println("5. Search Task");
+            System.out.println("6. Exit");
 
             System.out.println("====================");
             int choice;
 
             while (true) {
-                System.out.print("Enter your choice [1-5] : ");
+                System.out.print("Enter your choice [1-6] : ");
 
                     if (sc.hasNextInt()) {
                         choice = sc.nextInt();
                         sc.nextLine();
-                            if (choice >= 1 && choice <= 5) {
+                            if (choice >= 1 && choice <= 6) {
                                 break;
                         }
-                            System.out.println("Invalid choice! Please enter a number between 1 and 5.");
+                            System.out.println("Invalid choice! Please enter a number between 1 and 6.");
                     }
             else {
                 System.out.println("Invalid input! Please enter a number.");
@@ -55,11 +56,14 @@ public class Main{
                     taskManager.deleteTask();
                     break;
                 case 5:
+                    taskManager.searchTask();
+                    break;
+                case 6:
                     System.out.println("Exiting...");
                     continueProgram = false;
                     break;
                 default:
-                    System.out.println("Invalid choice! Please enter a number between 1 and 5.");
+                    System.out.println("Invalid choice! Please enter a number between 1 and 6.");
             }
         }
         sc.close();

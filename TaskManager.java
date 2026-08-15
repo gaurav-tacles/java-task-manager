@@ -326,4 +326,40 @@ while (true) {
             System.out.println("An error occurred while loading tasks from file.");
         }   
     }
+    public void searchTask() {
+        System.out.print("Enter Task Name to Search : ");
+        String searchName = sc.nextLine();
+        boolean taskFound = false;
+        int foundCount = 0;
+        for (Task task : tasks) {
+            if (task.getTaskName().toLowerCase().contains(searchName.toLowerCase()) ||
+                task.getDescription().toLowerCase().contains(searchName.toLowerCase())) {
+                    foundCount++;
+                }
+            }
+            if (foundCount == 0) {
+                System.out.println("No task found matching \"" + searchName + "\".");
+                return;
+            }
+
+        System.out.println("Total tasks found: " + foundCount);
+        System.out.println("====================");
+        for (Task task : tasks) {
+            if (task.getTaskName().toLowerCase().contains(searchName.toLowerCase()) ||
+                task.getDescription().toLowerCase().contains(searchName.toLowerCase())) {
+                System.out.println("Task ID: " + task.getTaskID());
+                System.out.println("Task Name: " + task.getTaskName());
+                System.out.println("Task Description: " + task.getDescription());
+                System.out.println("Task Creation Date: " + task.getCreationDate());
+                System.out.println("Task Due Date: " + task.getDueDate());
+                System.out.println("Task Priority: " + task.getPriority());
+                System.out.println("Task Status: " + task.getStatus());
+                taskFound = true;
+                foundCount++;
+            }
+        }
+        if (!taskFound) {
+    System.out.println("No task found matching \"" + searchName + "\".");
+        }
+    }
 }
