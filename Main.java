@@ -9,10 +9,6 @@ public class Main{
         TaskManager taskManager = new TaskManager();
         taskManager.loadTasksFromFile();
 
-        if(Line.trim().isEmpty()){
-            continue;
-        }
-
         boolean continueProgram = true;
         while (continueProgram) {
             System.out.println("====================");
@@ -27,11 +23,24 @@ public class Main{
             System.out.println("5. Exit");
 
             System.out.println("====================");
+            int choice;
 
-            System.out.print("Enter your choice [1-5] : ");
-                int choice = sc.nextInt();
-                sc.nextLine(); // Consume the newline character
+            while (true) {
+                System.out.print("Enter your choice [1-5] : ");
 
+                    if (sc.hasNextInt()) {
+                        choice = sc.nextInt();
+                        sc.nextLine();
+                            if (choice >= 1 && choice <= 5) {
+                                break;
+                        }
+                            System.out.println("Invalid choice! Please enter a number between 1 and 5.");
+                    }
+            else {
+                System.out.println("Invalid input! Please enter a number.");
+                sc.nextLine();
+                }
+            }
             switch (choice) {
                 case 1:
                     taskManager.addTask();
