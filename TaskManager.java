@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDate;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class TaskManager {
 
@@ -30,7 +32,9 @@ public class TaskManager {
                 "Pending"
             );
             tasks.add(newTask);
+            saveTasksToFile();
             System.out.println("Task Added Successfully!");
+            
     }
     private int taskIDCounter;
 
@@ -144,5 +148,61 @@ public class TaskManager {
         if(!taskFound){
             System.out.println("Task ID not found in your task list.");
         }
+    }
+    public void saveTasksToFile(){
+        try {
+            FileWriter Writer = new FileWriter("tasks.txt");
+            for (Task task : tasks) {
+                Writer.write(task.getTaskID() + "|" +
+                 task.getTaskName() + "|" +
+                 task.getDescription() + "|" +
+                 task.getCreationDate() + "|" +
+                 task.getDueDate() + "|" +
+                 task.getPriority() + "|" +
+                 task.getStatus() + "\n");
+                
+            }
+             Writer.close();
+            
+        }
+        catch (IOException e) {
+            
+
+        }
+ 
+    }
+    public void loadTasksFromFile(){
+        try {
+            Scanner fileScanner = new Scanner(new java.io.File("tasks.txt"));
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                String[] data = line.split("\\|");
+                int taskID = Integer.parseInt(data[0]);
+                String taskName = data[1];
+                String description = data[2];
+                LocalDate creationDate = LocalDate.parse(data[3]);
+                String dueDate = data[4];
+                String priority = data[5];
+                String status = data[6];
+
+                Task task = new Task(
+                    taskID, 
+                    taskName, 
+                    description, 
+                    creationDate, 
+                    dueDate, 
+                    priority, 
+                    status);
+
+                tasks.add(task);
+
+            }
+            fileScanner.close();
+           
+                
+        }
+        catch (java.io.FileNotFoundException e) {
+            System.out.println("An error occurred while loading tasks from file.");
+        }   
     }
 }

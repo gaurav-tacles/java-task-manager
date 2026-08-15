@@ -1,10 +1,18 @@
 import java.util.Scanner;
 
+import javax.sound.sampled.Line;
+
 public class Main{
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
         TaskManager taskManager = new TaskManager();
+        taskManager.loadTasksFromFile();
+
+        if(Line.trim().isEmpty()){
+            continue;
+        }
+
         boolean continueProgram = true;
         while (continueProgram) {
             System.out.println("====================");
@@ -47,4 +55,5 @@ public class Main{
         }
         sc.close();
     }
+
 }
