@@ -296,27 +296,25 @@ public class TaskManager {
             System.out.println("Task ID not found in your task list.");
         }
     }
-    public void saveTasksToFile(){
-        try {
-            FileWriter Writer = new FileWriter("tasks.txt");
+    public void saveTasksToFile() {
+
+        try (FileWriter writer = new FileWriter("tasks.txt")) {
             for (Task task : tasks) {
-                Writer.write(task.getTaskID() + "|" +
-                 task.getTaskName() + "|" +
-                 task.getDescription() + "|" +
-                 task.getCreationDate() + "|" +
-                 task.getDueDate() + "|" +
-                 task.getPriority() + "|" +
-                 task.getStatus() + "\n");
-                
+                writer.write(
+                    task.getTaskID() + "|" +
+                    task.getTaskName() + "|" +
+                    task.getDescription() + "|" +
+                    task.getCreationDate() + "|" +
+                    task.getDueDate() + "|" +
+                    task.getPriority() + "|" +
+                    task.getStatus() + "\n"
+                );
             }
-             Writer.close();
-            
         }
         catch (IOException e) {
             System.out.println("Error saving tasks to file.");
             System.out.println(e.getMessage());
         }
- 
     }
     public void loadTasksFromFile(){
         try {
@@ -327,16 +325,50 @@ public class TaskManager {
             continue;
         }
                 String[] data = line.split("\\|");
-                int taskID = Integer.parseInt(data[0]);
-                    if(taskID > taskIDCounter){
-                        taskIDCounter = taskID;
-                    }
+                if (data.length != 7) {
+                    System.out.println("Skipping invalid task data: " + line);
+                    continue;
+                }
+                int taskID;
+                try {
+                    taskID = Integer.parseInt(data[0]);
+                }
+                catch (NumberFormatException e) {
+                    System.out.println("Skipping invalid task ID: " + data[0]);
+                    continue;
+                }
+                if (taskID > taskIDCounter) {
+                    taskIDCounter = taskID;
+                }
                 String taskName = data[1];
                 String description = data[2];
-                LocalDate creationDate = LocalDate.parse(data[3]);
-                String dueDate = data[4];
-                String priority = data[5];
+                LocalDate creationDate;
+                String dueDate;
+
+                try {
+                    creationDate = LocalDate.parse(data[3]);
+                    LocalDate.parse(data[4]);
+                    dueDate = data[4];
+                }
+                catch (DateTimeParseException e) {
+                    System.out.println("Skipping task with invalid date: " + data[0]);
+                    continue;
+                }
+                String priority = data[5].toUpperCase();
                 String status = data[6];
+
+                if (!priority.equals("LOW") &&
+                    !priority.equals("MEDIUM") &&
+                    !priority.equals("HIGH")) {
+                    System.out.println("Skipping task with invalid priority: " + data[0]);
+                    continue;
+                }
+                if (!status.equals("Pending") &&
+                    !status.equals("In Progress") &&
+                    !status.equals("Completed")) {
+                    System.out.println("Skipping task with invalid status: " + data[0]);
+                    continue;
+                }
 
                 Task task = new Task(
                     taskID, 
@@ -360,7 +392,16 @@ public class TaskManager {
     }
     public void searchTask() {
         System.out.print("Enter Task Name to Search : ");
-        String searchName = sc.nextLine();
+        String searchName;
+
+        while (true) {
+            System.out.print("Enter Task Name to Search : ");
+            searchName = sc.nextLine();
+            if (!searchName.trim().isEmpty()) {
+                break;
+            }
+        System.out.println("Search text cannot be empty.");
+        }
         
         int foundCount = 0;
         for (Task task : tasks) {
