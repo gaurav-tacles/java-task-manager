@@ -23,22 +23,23 @@ public class Main{
             System.out.println("5. Search Task");
             System.out.println("6. Mark Task as Completed");
             System.out.println("7. Task Statistics");
-            System.out.println("8. Exit");
+            System.out.println("8. Show overdue tasks");
+            System.out.println("9. Exit");
             
 
             System.out.println("====================");
             int choice;
 
             while (true) {
-                System.out.print("Enter your choice [1-8] : ");
+                System.out.print("Enter your choice [1-9] : ");
 
                     if (sc.hasNextInt()) {
                         choice = sc.nextInt();
                         sc.nextLine();
-                            if (choice >= 1 && choice <= 8) {
+                            if (choice >= 1 && choice <= 9) {
                                 break;
                         }
-                            System.out.println("Invalid choice! Please enter a number between 1 and 8.");
+                            System.out.println("Invalid choice! Please enter a number between 1 and 9.");
                     }
             else {
                 System.out.println("Invalid input! Please enter a number.");
@@ -68,11 +69,14 @@ public class Main{
                     taskManager.showTaskStatistics();
                     break;
                 case 8:
+                    taskManager.showOverdueTasks();
+                    break;
+                case 9:
                     System.out.println("Exiting...");
                     continueProgram = false;
                     break;
                 default:
-                    System.out.println("Invalid choice! Please enter a number between 1 and 8.");
+                    System.out.println("Invalid choice! Please enter a number between 1 and 9.");
             }
         }
         sc.close();

@@ -456,4 +456,31 @@ public class TaskManager {
         System.out.println("Completed Tasks : " + completedCount);
         System.out.println("====================");
     }
+    public void showOverdueTasks() {
+    LocalDate today = LocalDate.now();
+    boolean found = false;
+
+    System.out.println("====================");
+    System.out.println(" OVERDUE TASKS");
+    System.out.println("====================");
+
+    for (Task task : tasks) {
+        LocalDate dueDate = LocalDate.parse(task.getDueDate());
+            if (dueDate.isBefore(today) &&
+                !task.getStatus().equals("Completed")) {
+
+                System.out.println("Task ID: " + task.getTaskID());
+                System.out.println("Task Name: " + task.getTaskName());
+                System.out.println("Task Due Date: " + task.getDueDate());
+                System.out.println("Task Priority: " + task.getPriority());
+                System.out.println("Task Status: " + task.getStatus());
+                System.out.println("--------------------");
+                found = true;
+            }
+        }
+        if (!found) {
+        System.out.println("No overdue tasks.");
+        }
+        System.out.println("====================");
+    }
 }
