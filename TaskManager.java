@@ -428,4 +428,32 @@ public class TaskManager {
             System.out.println("Task ID not found in your task list.");
         }
     }
+    public void showTaskStatistics() {
+        int pendingCount = 0;
+        int inProgressCount = 0;
+        int completedCount = 0;
+
+        for (Task task : tasks) {
+            if (task.getStatus().equals("Pending")) {
+                pendingCount++;
+            }
+        else if (task.getStatus().equals("In Progress")) {
+            inProgressCount++;
+            }
+        else if (task.getStatus().equals("Completed")) {
+            completedCount++;
+            }
+        }
+
+        int totalTasks = tasks.size();
+
+        System.out.println("====================");
+        System.out.println(" TASK STATISTICS");
+        System.out.println("====================");
+        System.out.println("Total Tasks     : " + totalTasks);
+        System.out.println("Pending Tasks   : " + pendingCount);
+        System.out.println("In Progress     : " + inProgressCount);
+        System.out.println("Completed Tasks : " + completedCount);
+        System.out.println("====================");
+    }
 }
