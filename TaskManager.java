@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-import javax.sound.sampled.Line;
 import java.time.LocalDate;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,7 +23,6 @@ public class TaskManager {
                 if (!taskName.trim().isEmpty()) {
                     break;
                 }
-
              System.out.println("Task name cannot be empty.");
             }
        String description;
@@ -43,12 +41,16 @@ public class TaskManager {
                 System.out.print("Enter Task Due Date [YYYY-MM-DD] : ");
                 dueDate = sc.nextLine();
                     try {
-                        LocalDate.parse(dueDate);
-                        break;
+                        LocalDate selectedDate = LocalDate.parse(dueDate); 
+                        if (selectedDate.isBefore(LocalDate.now())) {     //To user cannot enter past date
+                            System.out.println("Due date cannot be in the past.");
+                            continue;
                         }
-                    catch (DateTimeParseException e) {
-                        System.out.println("Invalid date! Please use YYYY-MM-DD.");
-                        }
+                    break;
+                    }
+                catch (DateTimeParseException e) {
+                    System.out.println("Invalid date! Please use YYYY-MM-DD.");
+                }
                     }
         String priority;
             while (true) {
@@ -80,6 +82,10 @@ public class TaskManager {
     private int taskIDCounter;
 
     public void viewTasks() {
+        if (tasks.isEmpty()) {
+            System.out.println("No tasks available.");
+            return;
+        }
         for(Task task : tasks) {
             System.out.println("Task ID: " + task.getTaskID());
             System.out.println("Task Name: " + task.getTaskName());
@@ -88,30 +94,27 @@ public class TaskManager {
             System.out.println("Task Due Date: " + task.getDueDate());
             System.out.println("Task Priority: " + task.getPriority());
             System.out.println("Task Status: " + task.getStatus());
-            System.out.println();
+            System.out.println("--------------------");
         }
     }
     public void updateTask(){
         int taskIdUpdate;
 
-while (true) {
-    System.out.print("Enter Task ID to Update : ");
-
-    if (sc.hasNextInt()) {
-        taskIdUpdate = sc.nextInt();
-        sc.nextLine();
-
-        if (taskIdUpdate > 0) {
-            break;
+        while (true) {
+            System.out.print("Enter Task ID to Update : ");
+            if (sc.hasNextInt()) {
+                taskIdUpdate = sc.nextInt();
+                sc.nextLine();
+                    if (taskIdUpdate > 0) {
+                        break;
+                    }
+                System.out.println("Task ID must be greater than 0.");
+            }
+        else {
+            System.out.println("Invalid input! Please enter a numeric Task ID.");
+            sc.nextLine();
+            }
         }
-
-        System.out.println("Task ID must be greater than 0.");
-    }
-    else {
-        System.out.println("Invalid input! Please enter a numeric Task ID.");
-        sc.nextLine();
-    }
-}
         boolean taskFound = false;
         for(Task task : tasks){
             if(task.getTaskID() == taskIdUpdate){
@@ -123,10 +126,23 @@ while (true) {
                 System.out.println("3. Task Due Date");
                 System.out.println("4. Task Priority");
                 System.out.println("5. Task Status");
-                System.out.print("Enter your choice [1-5] : ");
-                int choice = sc.nextInt();
-                sc.nextLine(); // Consume the newline character
+                int choice;
 
+                while (true) {
+                    System.out.print("Enter your choice [1-5] : ");
+                    if (sc.hasNextInt()) {
+                        choice = sc.nextInt();
+                        sc.nextLine();
+                            if (choice >= 1 && choice <= 5) {
+                                break;
+                            }
+                        System.out.println("Invalid choice! Please enter a number between 1 and 5.");
+                    }
+                    else {
+                        System.out.println("Invalid input! Please enter a number.");
+                        sc.nextLine();
+                        }
+                }
                 switch(choice){
                     case 1:
                         System.out.print("Your Current Task Name : " + task.getTaskName() + "\n");
@@ -138,10 +154,9 @@ while (true) {
                                 if (!newTaskName.trim().isEmpty()) {
                                     break;
                         }
-
-                    System.out.println("Task name cannot be empty.");
-                }  
-            task.setTaskName(newTaskName);
+                            System.out.println("Task name cannot be empty.");
+                        }  
+                    task.setTaskName(newTaskName);
                         break;
                     case 2:
                         System.out.print("Your Current Task Description : " + task.getDescription() + "\n");
@@ -152,12 +167,11 @@ while (true) {
                             newDescription = sc.nextLine();
                             if (!newDescription.trim().isEmpty()) {
                                 break;
-                        }
-
-                    System.out.println("Task description cannot be empty.");
+                            }
+                        System.out.println("Task description cannot be empty.");
                 }
             task.setDescription(newDescription);
-                       
+            break;        
                     case 3:
                         System.out.print("Your Current Task Due Date : " + task.getDueDate() + "\n");
                        String newDueDate;
@@ -165,13 +179,17 @@ while (true) {
                 System.out.print("Enter Task Due Date [YYYY-MM-DD] : ");
                 newDueDate = sc.nextLine();
                     try {
-                        LocalDate.parse(newDueDate);
-                        break;
+                        LocalDate selectedDate = LocalDate.parse(newDueDate);
+                        if (selectedDate.isBefore(LocalDate.now())) {
+                            System.out.println("Due date cannot be in the past.");
+                            continue;
                         }
+                        break;
+                    }
                     catch (DateTimeParseException e) {
                         System.out.println("Invalid date! Please use YYYY-MM-DD.");
-                        }
                     }
+                }
                     task.setDueDate(newDueDate);
                         break;
                     case 4:
@@ -196,9 +214,23 @@ while (true) {
                         System.out.println("1. Pending");
                         System.out.println("2. In Progress");
                         System.out.println("3. Completed");
-                        System.out.print("Enter your choice [1-3] : ");
-                        int statusChoice = sc.nextInt();
-                        sc.nextLine(); // Consume the newline character
+                        int statusChoice;
+
+                        while (true) {
+                            System.out.print("Enter your choice [1-3] : ");
+                            if (sc.hasNextInt()) {
+                                statusChoice = sc.nextInt();
+                                sc.nextLine();
+                                    if (statusChoice >= 1 && statusChoice <= 3) {
+                                        break;
+                                    }
+                                System.out.println("Invalid choice! Please enter 1, 2, or 3.");
+                            }
+                        else {
+                            System.out.println("Invalid input! Please enter a number.");
+                            sc.nextLine();
+                            }
+                        } // Consume the newline character
                         String newStatus;
                         switch(statusChoice){
                             case 1:
@@ -329,7 +361,7 @@ while (true) {
     public void searchTask() {
         System.out.print("Enter Task Name to Search : ");
         String searchName = sc.nextLine();
-        boolean taskFound = false;
+        
         int foundCount = 0;
         for (Task task : tasks) {
             if (task.getTaskName().toLowerCase().contains(searchName.toLowerCase()) ||
@@ -354,12 +386,46 @@ while (true) {
                 System.out.println("Task Due Date: " + task.getDueDate());
                 System.out.println("Task Priority: " + task.getPriority());
                 System.out.println("Task Status: " + task.getStatus());
+                
+            }
+        }
+    }
+    public void markTaskCompleted() {
+        int taskId;
+
+        while (true) {
+            System.out.print("Enter Task ID to Mark Completed : ");
+
+            if (sc.hasNextInt()) {
+                taskId = sc.nextInt();
+                sc.nextLine();
+                    if (taskId > 0) {
+                    break;
+                    }
+                System.out.println("Task ID must be greater than 0.");
+                }
+            else {
+                System.out.println("Invalid input! Please enter a numeric Task ID.");
+                sc.nextLine();
+            }
+        }
+        boolean taskFound = false;
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).getTaskID() == taskId) {
                 taskFound = true;
-                foundCount++;
+                    if (tasks.get(i).getStatus().equals("Completed")) {
+                        System.out.println("Task is already completed!");
+                    }
+                else {
+                    tasks.get(i).setStatus("Completed");
+                    System.out.println("Task marked as completed.");
+                    saveTasksToFile();
+                }
+                break;
             }
         }
         if (!taskFound) {
-    System.out.println("No task found matching \"" + searchName + "\".");
+            System.out.println("Task ID not found in your task list.");
         }
     }
 }
